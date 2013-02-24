@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="localStoreService" class="ru.selena.core.impl.InMemoryLocalStoreService"/>
+
+    <bean id="keyRingService" class="ru.selena.core.impl.IntegerKeyRingService">
+        <property name="replicationFactor" value="3"/>
+    </bean>
+
+    <bean id="coreService" class="ru.selena.core.impl.StaticCoreService">
+        <property name="keyRingService" ref="keyRingService"/>
+    </bean>
+
+    <bean id="transportService" class="ru.selena.net.impl.HttpTransportService"/>
+
+    <bean id="remoteStoreService" class="ru.selena.core.impl.RemoteStoreServiceImpl">
+        <property name="transportService" ref="transportService"/>
+    </bean>
+
+    <bean id="coordinationService" class="ru.selena.core.impl.CoordinationServiceImpl">
+        <property name="readCount" value="2"/>
+        <property name="writeCount" value="2"/>
+        <property name="coreService" ref="coreService"/>
+        <property name="remoteStoreService" ref="remoteStoreService"/>
+        <property name="localStoreService" ref="localStoreService"/>
+        <property name="keyRingService" ref="keyRingService"/>
+    </bean>
+
+    <bean id="clientIOServlet" class="ru.selena.net.servlet.IOServlet">
+        <property name="storeService" ref="coordinationService"/>
+    </bean>
+
+    <bean id="internalIOServlet" class="ru.selena.net.servlet.InternalIOServlet">
+        <property name="storeService" ref="localStoreService"/>
+    </bean>
+
+    <bean class="ru.selena.HttpServerInitializer" init-method="start" destroy-method="stop">
+        <property name="coreService" ref="coreService"/>
+        <property name="clientServlet" ref="clientIOServlet"/>
+        <property name="internalServlet" ref="internalIOServlet"/>
+    </bean>
+</beans>
