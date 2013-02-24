@@ -1,3 +1,5 @@
 //todo add logging and remove e.printStackTrace()
 //todo when updating version information don't play any role
 //todo update logging in Coordination Service
+//todo write persistent store engine
+//todo write replication
