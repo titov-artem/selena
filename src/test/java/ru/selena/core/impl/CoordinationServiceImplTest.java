@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import ru.selena.TestModelFactories;
 import ru.selena.core.CoreService;
 import ru.selena.core.KeyRingService;
 import ru.selena.core.LocalStoreService;
@@ -47,10 +48,10 @@ public class CoordinationServiceImplTest {
     private HostWithIntegerToken host3;
 
     {
-        key = new IntegerHasKey(new byte[]{1, 2, 3, 4});
-        dataObject1 = new DataObjectImpl(key, new LongVersion(NumberUtils.toByteArray(2l)), new byte[1]);
-        dataObject2 = new DataObjectImpl(key, new LongVersion(NumberUtils.toByteArray(2l)), new byte[2]);
-        dataObject3 = new DataObjectImpl(key, new LongVersion(NumberUtils.toByteArray(3l)), new byte[3]);
+        key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
+        dataObject1 = TestModelFactories.createDataObject(key, TestModelFactories.createVersion(NumberUtils.toByteArray(2l)), new byte[1]);
+        dataObject2 = TestModelFactories.createDataObject(key, TestModelFactories.createVersion(NumberUtils.toByteArray(2l)), new byte[2]);
+        dataObject3 = TestModelFactories.createDataObject(key, TestModelFactories.createVersion(NumberUtils.toByteArray(3l)), new byte[3]);
         host1 = new HostWithIntegerToken("localhost", 8080, 2);
         host2 = new HostWithIntegerToken("localhost", 8081, 4);
         host3 = new HostWithIntegerToken("localhost", 8082, 6);

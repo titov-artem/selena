@@ -17,7 +17,7 @@ public class IntegerHasKey implements Key {
     private final byte[] value;
     private final int calculatedHashCode;
 
-    public IntegerHasKey(final byte[] value) {
+    IntegerHasKey(final byte[] value) {
         this.value = value;
         this.calculatedHashCode = calculateHashCode();
     }

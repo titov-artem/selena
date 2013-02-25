@@ -1,7 +1,7 @@
-package ru.selena.model.factory.impl;
+package ru.selena.model.impl;
 
 import ru.selena.model.Key;
-import ru.selena.model.factory.KeyFactory;
+import ru.selena.model.KeyFactory;
 import ru.selena.model.impl.IntegerHasKey;
 
 /**

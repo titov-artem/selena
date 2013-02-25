@@ -4,14 +4,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ru.selena.HttpServerInitializer;
+import ru.selena.TestModelFactories;
 import ru.selena.core.CoreService;
 import ru.selena.core.LocalStoreService;
 import ru.selena.core.exception.DataStoreException;
 import ru.selena.core.exception.UpdatingOlderVersionException;
 import ru.selena.model.DataObject;
-import ru.selena.model.impl.DataObjectImpl;
-import ru.selena.model.impl.IntegerHasKey;
-import ru.selena.model.impl.LongVersion;
+import ru.selena.model.Key;
 import ru.selena.net.impl.HttpTransportService;
 import ru.selena.net.model.HostWithIntegerToken;
 import ru.selena.net.servlet.IOServlet;
@@ -72,10 +71,10 @@ public class RemoteStoreServiceImplTest {
 
     @Test
     public void testGetNormal() throws Exception {
-        final IntegerHasKey key = new IntegerHasKey(new byte[]{1, 2, 3, 4});
-        final DataObjectImpl value = new DataObjectImpl(
+        final Key key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
+        final DataObject value = TestModelFactories.createDataObject(
                 key,
-                new LongVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}),
+                TestModelFactories.createVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}),
                 new byte[]{1, 2, 3, 4}
         );
         when(localStoreService.get(key)).thenReturn(value);
@@ -87,10 +86,10 @@ public class RemoteStoreServiceImplTest {
 
     @Test
     public void testGetStub() throws Exception {
-        final IntegerHasKey key = new IntegerHasKey(new byte[]{1, 2, 3, 4});
-        final DataObjectImpl value = new DataObjectImpl(
+        final Key key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
+        final DataObject value = TestModelFactories.createDataObject(
                 key,
-                new LongVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8})
+                TestModelFactories.createVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8})
         );
         when(localStoreService.get(key)).thenReturn(value);
         final DataObject returnedValue = remoteStoreService.get(key, host);
@@ -101,7 +100,7 @@ public class RemoteStoreServiceImplTest {
 
     @Test
     public void testGetNotFound() throws Exception {
-        final IntegerHasKey key = new IntegerHasKey(new byte[]{1, 2, 3, 4});
+        final Key key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
         final String errorMessage = "Test";
         when(localStoreService.get(key)).thenThrow(new NoSuchElementException(errorMessage));
         try {
@@ -117,7 +116,7 @@ public class RemoteStoreServiceImplTest {
 
     @Test
     public void testGetDataStoreException() throws Exception {
-        final IntegerHasKey key = new IntegerHasKey(new byte[]{1, 2, 3, 4});
+        final Key key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
         final String getMessage = "Test";
         when(localStoreService.get(key)).thenThrow(new DataStoreException(getMessage));
         try {
@@ -133,10 +132,10 @@ public class RemoteStoreServiceImplTest {
 
     @Test
     public void testPutNormal() throws Exception {
-        final IntegerHasKey key = new IntegerHasKey(new byte[]{1, 2, 3, 4});
-        final DataObjectImpl value = new DataObjectImpl(
+        final Key key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
+        final DataObject value = TestModelFactories.createDataObject(
                 key,
-                new LongVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}),
+                TestModelFactories.createVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}),
                 new byte[]{1, 2, 3, 4}
         );
         remoteStoreService.put(value, host);
@@ -146,10 +145,10 @@ public class RemoteStoreServiceImplTest {
 
     @Test
     public void testPutStub() throws Exception {
-        final IntegerHasKey key = new IntegerHasKey(new byte[]{1, 2, 3, 4});
-        final DataObjectImpl value = new DataObjectImpl(
+        final Key key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
+        final DataObject value = TestModelFactories.createDataObject(
                 key,
-                new LongVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8})
+                TestModelFactories.createVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8})
         );
         remoteStoreService.put(value, host);
         verify(localStoreService, times(1)).put(value);
@@ -158,10 +157,10 @@ public class RemoteStoreServiceImplTest {
 
     @Test
     public void testPutConflict() throws Exception {
-        final IntegerHasKey key = new IntegerHasKey(new byte[]{1, 2, 3, 4});
-        final DataObjectImpl value = new DataObjectImpl(
+        final Key key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
+        final DataObject value = TestModelFactories.createDataObject(
                 key,
-                new LongVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}),
+                TestModelFactories.createVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}),
                 new byte[]{1, 2, 3, 4}
         );
         final String conflictMessage = "Test";
@@ -178,10 +177,10 @@ public class RemoteStoreServiceImplTest {
 
     @Test
     public void testPutDataStoreException() throws Exception {
-        final IntegerHasKey key = new IntegerHasKey(new byte[]{1, 2, 3, 4});
-        final DataObjectImpl value = new DataObjectImpl(
+        final Key key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
+        final DataObject value = TestModelFactories.createDataObject(
                 key,
-                new LongVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}),
+                TestModelFactories.createVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8}),
                 new byte[]{1, 2, 3, 4}
         );
         final String storeMessage = "Test";

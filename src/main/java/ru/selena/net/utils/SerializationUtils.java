@@ -5,12 +5,11 @@ import org.slf4j.LoggerFactory;
 import ru.selena.model.DataObject;
 import ru.selena.model.Key;
 import ru.selena.model.Version;
-import ru.selena.model.impl.DataObjectImpl;
-import ru.selena.model.impl.IntegerHasKey;
-import ru.selena.model.impl.LongVersion;
 import ru.selena.util.NumberUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static ru.selena.model.Factories.Instances.*;
 
 /**
  * Date: 12/18/12
@@ -43,9 +42,9 @@ public final class SerializationUtils {
         final Version version = deserializeVersion(buffer, offset);
         final boolean isStub = buffer[offset.getAndIncrement()] == 1;
         if (isStub) {
-            return new DataObjectImpl(key, version);
+            return getDataObjectFactory().createDataObject(key, version);
         } else {
-            return new DataObjectImpl(key, version, deserializeMeasuredArray(buffer, offset));
+            return getDataObjectFactory().createDataObject(key, version, deserializeMeasuredArray(buffer, offset));
         }
     }
 
@@ -65,7 +64,7 @@ public final class SerializationUtils {
     public static Key deserializeKey(final byte[] buffer, final AtomicInteger offset) {
         log.debug("Deserializing key");
         final byte[] value = deserializeMeasuredArray(buffer, offset);
-        return new IntegerHasKey(value);
+        return getKeyFactory().createKey(value);
     }
 
     public static Version deserializeVersion(final byte[] buffer, final int offset) {
@@ -84,7 +83,7 @@ public final class SerializationUtils {
     public static Version deserializeVersion(final byte[] buffer, final AtomicInteger offset) {
         log.debug("Deserializing version");
         final byte[] value = deserializeMeasuredArray(buffer, offset);
-        return new LongVersion(value);
+        return getVersionFactory().createVersion(value);
     }
 
     public static void serializeDataObject(final DataObject dataObject, final byte[] buffer, final int offset) {

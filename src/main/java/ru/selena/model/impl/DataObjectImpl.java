@@ -27,7 +27,7 @@ public class DataObjectImpl implements DataObject {
      * @param version version
      * @param value   value
      */
-    public DataObjectImpl(final Key key, final Version version, final byte[] value) {
+    DataObjectImpl(final Key key, final Version version, final byte[] value) {
         this(key, version, false, value);
     }
 
@@ -37,7 +37,7 @@ public class DataObjectImpl implements DataObject {
      * @param key     key
      * @param version version
      */
-    public DataObjectImpl(final Key key, final Version version) {
+    DataObjectImpl(final Key key, final Version version) {
         this(key, version, true, EMPTY_ARRAY);
     }
 

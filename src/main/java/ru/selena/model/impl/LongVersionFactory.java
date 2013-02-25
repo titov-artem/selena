@@ -1,7 +1,7 @@
-package ru.selena.model.factory.impl;
+package ru.selena.model.impl;
 
 import ru.selena.model.Version;
-import ru.selena.model.factory.VersionFactory;
+import ru.selena.model.VersionFactory;
 import ru.selena.model.impl.LongVersion;
 
 /**

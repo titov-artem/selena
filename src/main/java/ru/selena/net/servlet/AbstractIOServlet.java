@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import ru.selena.core.StoreService;
 import ru.selena.model.DataObject;
+import ru.selena.model.Factories;
 import ru.selena.model.Key;
 import ru.selena.model.impl.IntegerHasKey;
 import ru.selena.net.utils.SerializationUtils;
@@ -61,7 +62,7 @@ public abstract class AbstractIOServlet<T extends StoreService> extends HttpServ
             return;
         }
 
-        processGet(new IntegerHasKey(key), response);
+        processGet(Factories.Instances.getKeyFactory().createKey(key), response);
     }
 
     protected abstract void processGet(final Key key, final HttpServletResponse response) throws IOException;

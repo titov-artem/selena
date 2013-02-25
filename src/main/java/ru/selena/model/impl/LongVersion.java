@@ -13,7 +13,7 @@ public class LongVersion implements Version {
 
     private final long version;
 
-    public LongVersion(final byte[] version) {
+    LongVersion(final byte[] version) {
         this.version = NumberUtils.toLong(version);
     }
 

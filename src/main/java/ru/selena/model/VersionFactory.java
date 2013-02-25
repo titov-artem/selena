@@ -1,4 +1,4 @@
-package ru.selena.model.factory;
+package ru.selena.model;
 
 import ru.selena.model.Version;
 

@@ -1,9 +1,9 @@
-package ru.selena.model.factory.impl;
+package ru.selena.model.impl;
 
 import ru.selena.model.DataObject;
 import ru.selena.model.Key;
 import ru.selena.model.Version;
-import ru.selena.model.factory.DataObjectFactory;
+import ru.selena.model.DataObjectFactory;
 import ru.selena.model.impl.DataObjectImpl;
 
 /**
