@@ -1,4 +1,9 @@
-package ru.selena.model;
+package ru.selena;
+
+import ru.selena.model.DataObjectFactory;
+import ru.selena.model.KeyFactory;
+import ru.selena.model.VersionFactory;
+import ru.selena.net.model.HostFactory;
 
 import java.util.Properties;
 
@@ -18,6 +23,7 @@ public final class Factories {
     public static final String DATA_OBJECT_FACTORY_PROP_NAME = "ru.selena.model.factory.data.object";
     public static final String KEY_FACTORY_PROP_NAME = "ru.selena.model.factory.key";
     public static final String VERSION_FACTORY_PROP_NAME = "ru.selena.model.factory.version";
+    public static final String HOST_FACTORY_PROP_NAME = "ru.selena.model.factory.host";
 
     /**
      * Contains names of default implementations for model objects factories
@@ -30,6 +36,7 @@ public final class Factories {
         public static final String DEFAULT_DATA_OBJECT_FACTORY = "ru.selena.model.impl.DataObjectFactoryImpl";
         public static final String DEFAULT_KEY_FACTORY = "ru.selena.model.impl.IntegerHashKeyFactory";
         public static final String DEFAULT_VERSION_FACTORY = "ru.selena.model.impl.LongVersionFactory";
+        public static final String DEFAULT_HOST_FACTORY = "ru.selena.net.model.impl.HostWithIntegerTokenFactory";
     }
 
     /**
@@ -39,6 +46,7 @@ public final class Factories {
         private static DataObjectFactory dataObjectFactory;
         private static KeyFactory keyFactory;
         private static VersionFactory versionFactory;
+        private static HostFactory hostFactory;
 
         static {
             initFactories();
@@ -50,6 +58,7 @@ public final class Factories {
          * <li>DataObject factory - {@value Factories#DATA_OBJECT_FACTORY_PROP_NAME}</li>
          * <li>Key factory - {@value Factories#KEY_FACTORY_PROP_NAME}</li>
          * <li>Version factory - {@value Factories#VERSION_FACTORY_PROP_NAME}</li>
+         * <li>Host factory - {@value Factories#HOST_FACTORY_PROP_NAME}</li>
          * </ul>
          * properties. If some property doesn't specified then specified in {@link Factories.Defaults}
          * implementations will be used.
@@ -62,15 +71,19 @@ public final class Factories {
                     properties.getProperty(Factories.KEY_FACTORY_PROP_NAME, Factories.Defaults.DEFAULT_KEY_FACTORY);
             final String versionFactoryClassName =
                     properties.getProperty(Factories.VERSION_FACTORY_PROP_NAME, Factories.Defaults.DEFAULT_VERSION_FACTORY);
+            final String hostFactoryClassName =
+                    properties.getProperty(Factories.HOST_FACTORY_PROP_NAME, Factories.Defaults.DEFAULT_HOST_FACTORY);
             try {
                 final ClassLoader classLoader = Instances.class.getClassLoader();
                 final Class<?> dataObjectFactoryClass = classLoader.loadClass(dataObjectFactoryClassName);
                 final Class<?> keyFactoryClass = classLoader.loadClass(keyFactoryClassName);
                 final Class<?> versionFactoryClass = classLoader.loadClass(versionFactoryClassName);
+                final Class<?> hostFactoryClass = classLoader.loadClass(hostFactoryClassName);
 
                 dataObjectFactory = (DataObjectFactory) dataObjectFactoryClass.newInstance();
                 keyFactory = (KeyFactory) keyFactoryClass.newInstance();
                 versionFactory = (VersionFactory) versionFactoryClass.newInstance();
+                hostFactory = (HostFactory) hostFactoryClass.newInstance();
             } catch (Exception e) {
                 throw new IllegalStateException("Failed to initialize model factories for serialization utils", e);
             }
@@ -86,6 +99,10 @@ public final class Factories {
 
         public static VersionFactory getVersionFactory() {
             return versionFactory;
+        }
+
+        public static HostFactory getHostFactory() {
+            return hostFactory;
         }
     }
 }

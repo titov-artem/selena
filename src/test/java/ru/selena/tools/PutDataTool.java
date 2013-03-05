@@ -14,7 +14,9 @@ import ru.selena.model.impl.IntegerHashKeyFactory;
 import ru.selena.model.impl.LongVersionFactory;
 import ru.selena.net.impl.HttpTransportService;
 import ru.selena.net.model.Host;
-import ru.selena.net.model.HostWithIntegerToken;
+import ru.selena.net.model.impl.HostWithIntegerToken;
+import ru.selena.net.model.impl.HostWithIntegerTokenFactory;
+import ru.selena.util.NumberUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,19 +48,19 @@ public class PutDataTool {
     @Parameterized.Parameters
     public static List<Object[]> getData() {
         return Arrays.asList(new Object[][]{
-                {new HostWithIntegerToken("localhost", 8080, 1),
+                {new HostWithIntegerTokenFactory().createHost("localhost", 8080, NumberUtils.toByteArray(1)),
                         DATA_OBJECT_FACTORY.createDataObject(
                                 KEY_FACTORY.createKey(new byte[]{(byte) 0x12}),
                                 VERSION_FACTORY.createVersion(new byte[]{0, 0, 0, 0, 0, 0, 0, 1}),
                                 new byte[(byte) 0x01]
                         ),},
-                {new HostWithIntegerToken("localhost", 8081, 1),
+                {new HostWithIntegerTokenFactory().createHost("localhost", 8081, NumberUtils.toByteArray(1)),
                         DATA_OBJECT_FACTORY.createDataObject(
                                 KEY_FACTORY.createKey(new byte[]{(byte) 0x12}),
                                 VERSION_FACTORY.createVersion(new byte[]{0, 0, 0, 0, 0, 0, 0, 2}),
                                 new byte[(byte) 0x01]
                         ),},
-                {new HostWithIntegerToken("localhost", 8082, 1),
+                {new HostWithIntegerTokenFactory().createHost("localhost", 8082, NumberUtils.toByteArray(1)),
                         DATA_OBJECT_FACTORY.createDataObject(
                                 KEY_FACTORY.createKey(new byte[]{(byte) 0x12}),
                                 VERSION_FACTORY.createVersion(new byte[]{0, 0, 0, 0, 0, 0, 0, 3}),

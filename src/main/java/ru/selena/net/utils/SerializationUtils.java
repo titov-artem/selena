@@ -9,7 +9,7 @@ import ru.selena.util.NumberUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static ru.selena.model.Factories.Instances.*;
+import static ru.selena.Factories.Instances.*;
 
 /**
  * Date: 12/18/12

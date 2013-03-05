@@ -12,12 +12,12 @@ import java.util.Arrays;
  *
  * @author Artem Titov
  */
-public class IntegerHasKey implements Key {
+public class IntegerHashKey implements Key {
 
     private final byte[] value;
     private final int calculatedHashCode;
 
-    IntegerHasKey(final byte[] value) {
+    IntegerHashKey(final byte[] value) {
         this.value = value;
         this.calculatedHashCode = calculateHashCode();
     }
@@ -46,10 +46,10 @@ public class IntegerHasKey implements Key {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof IntegerHasKey)) {
+        if (!(obj instanceof IntegerHashKey)) {
             return false;
         }
-        final IntegerHasKey k = (IntegerHasKey) obj;
+        final IntegerHashKey k = (IntegerHashKey) obj;
         return Arrays.equals(value, k.value);
     }
 

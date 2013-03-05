@@ -36,7 +36,7 @@ public final class CoordinationServiceImpl implements CoordinationService, Initi
     private KeyRingService keyRingService;
     private LocalStoreService localStoreService;
     private RemoteStoreService remoteStoreService;
-    private CoreService coreService;
+    private ClusterManager clusterManager;
     private Host currentHost;
 
     @Required
@@ -65,13 +65,13 @@ public final class CoordinationServiceImpl implements CoordinationService, Initi
     }
 
     @Required
-    public void setCoreService(final CoreService coreService) {
-        this.coreService = coreService;
+    public void setClusterManager(final ClusterManager clusterManager) {
+        this.clusterManager = clusterManager;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.currentHost = coreService.getCurrentHost();
+        this.currentHost = clusterManager.getCurrentHost();
     }
 
     @Override

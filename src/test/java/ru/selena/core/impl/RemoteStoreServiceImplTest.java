@@ -5,16 +5,19 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.selena.HttpServerInitializer;
 import ru.selena.TestModelFactories;
-import ru.selena.core.CoreService;
+import ru.selena.core.ClusterManager;
 import ru.selena.core.LocalStoreService;
 import ru.selena.core.exception.DataStoreException;
 import ru.selena.core.exception.UpdatingOlderVersionException;
 import ru.selena.model.DataObject;
 import ru.selena.model.Key;
 import ru.selena.net.impl.HttpTransportService;
-import ru.selena.net.model.HostWithIntegerToken;
+import ru.selena.net.model.Host;
+import ru.selena.net.model.impl.HostWithIntegerToken;
+import ru.selena.net.model.impl.HostWithIntegerTokenFactory;
 import ru.selena.net.servlet.IOServlet;
 import ru.selena.net.servlet.InternalIOServlet;
+import ru.selena.util.NumberUtils;
 
 import java.util.NoSuchElementException;
 
@@ -30,13 +33,13 @@ import static org.mockito.Mockito.*;
  */
 public class RemoteStoreServiceImplTest {
 
-    private HostWithIntegerToken host = new HostWithIntegerToken("localhost", 8080, 1);
+    private Host host = new HostWithIntegerTokenFactory().createHost("localhost", 8080, NumberUtils.toByteArray(1));
 
     private LocalStoreService localStoreService;
-    private CoreService coreService = mock(CoreService.class);
+    private ClusterManager clusterManager = mock(ClusterManager.class);
 
     {
-        when(coreService.getCurrentHost()).thenReturn(host);
+        when(clusterManager.getCurrentHost()).thenReturn(host);
     }
 
     private RemoteStoreServiceImpl remoteStoreService = new RemoteStoreServiceImpl();
@@ -53,7 +56,7 @@ public class RemoteStoreServiceImplTest {
     {
         serverInitializer.setClientServlet(clientIOServlet);
         serverInitializer.setInternalServlet(internalIOServlet);
-        serverInitializer.setCoreService(coreService);
+        serverInitializer.setClusterManager(clusterManager);
     }
 
     @Before

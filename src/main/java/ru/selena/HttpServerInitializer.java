@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Required;
-import ru.selena.core.CoreService;
+import ru.selena.core.ClusterManager;
 
 import javax.servlet.http.HttpServlet;
 
@@ -32,7 +32,7 @@ public final class HttpServerInitializer implements InitializingBean {
 
     private HttpServlet clientServlet;
     private HttpServlet internalServlet;
-    private CoreService coreService;
+    private ClusterManager clusterManager;
 
     @Required
     public void setClientServlet(final HttpServlet clientServlet) {
@@ -45,8 +45,8 @@ public final class HttpServerInitializer implements InitializingBean {
     }
 
     @Required
-    public void setCoreService(final CoreService coreService) {
-        this.coreService = coreService;
+    public void setClusterManager(final ClusterManager clusterManager) {
+        this.clusterManager = clusterManager;
     }
 
     @Override
@@ -91,7 +91,7 @@ public final class HttpServerInitializer implements InitializingBean {
 
     private Connector[] createConnectors() {
         final Connector connector = new SelectChannelConnector();
-        final int port = coreService.getCurrentHost().getPort();
+        final int port = clusterManager.getCurrentHost().getPort();
         connector.setPort(port);
         log.info("Set up connector on port " + port);
         return new Connector[]{connector};

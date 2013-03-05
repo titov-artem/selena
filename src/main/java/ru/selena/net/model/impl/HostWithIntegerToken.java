@@ -1,6 +1,7 @@
-package ru.selena.net.model;
+package ru.selena.net.model.impl;
 
 import org.apache.commons.lang.Validate;
+import ru.selena.net.model.Host;
 import ru.selena.util.NumberUtils;
 
 /**
@@ -18,7 +19,7 @@ public class HostWithIntegerToken implements Host {
     private final int token;
     private final int calculatedHashCode;
 
-    public HostWithIntegerToken(final String host, final int port, final int token) {
+    HostWithIntegerToken(final String host, final int port, final int token) {
         Validate.isTrue(host != null && !host.isEmpty(), "Host can't be null or empty string");
         this.host = host;
         this.port = port;

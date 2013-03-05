@@ -6,9 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import ru.selena.core.StoreService;
 import ru.selena.model.DataObject;
-import ru.selena.model.Factories;
+import ru.selena.Factories;
 import ru.selena.model.Key;
-import ru.selena.model.impl.IntegerHasKey;
 import ru.selena.net.utils.SerializationUtils;
 import ru.selena.util.collections.ArrayUtils;
 

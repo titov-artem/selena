@@ -3,9 +3,6 @@ package ru.selena.net.utils;
 import org.junit.Test;
 import ru.selena.TestModelFactories;
 import ru.selena.model.DataObject;
-import ru.selena.model.impl.DataObjectImpl;
-import ru.selena.model.impl.IntegerHasKey;
-import ru.selena.model.impl.LongVersion;
 import ru.selena.util.NumberUtils;
 import ru.selena.util.collections.ArrayUtils;
 

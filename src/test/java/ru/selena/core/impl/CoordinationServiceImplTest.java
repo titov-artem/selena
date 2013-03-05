@@ -6,18 +6,16 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import ru.selena.TestModelFactories;
-import ru.selena.core.CoreService;
+import ru.selena.core.ClusterManager;
 import ru.selena.core.KeyRingService;
 import ru.selena.core.LocalStoreService;
 import ru.selena.core.RemoteStoreService;
 import ru.selena.core.exception.DataStoreException;
 import ru.selena.model.DataObject;
 import ru.selena.model.Key;
-import ru.selena.model.impl.DataObjectImpl;
-import ru.selena.model.impl.IntegerHasKey;
-import ru.selena.model.impl.LongVersion;
 import ru.selena.net.model.Host;
-import ru.selena.net.model.HostWithIntegerToken;
+import ru.selena.net.model.impl.HostWithIntegerToken;
+import ru.selena.net.model.impl.HostWithIntegerTokenFactory;
 import ru.selena.util.NumberUtils;
 
 import java.util.Arrays;
@@ -37,27 +35,27 @@ public class CoordinationServiceImplTest {
 
     private CoordinationServiceImpl coordinationService;
     private KeyRingService keyRingService;
-    private CoreService coreService;
+    private ClusterManager clusterManager;
     private Key key;
     private DataObject dataObject1;
     private DataObject dataObject2;
     private DataObject dataObject3;
 
-    private HostWithIntegerToken host1;
-    private HostWithIntegerToken host2;
-    private HostWithIntegerToken host3;
+    private Host host1;
+    private Host host2;
+    private Host host3;
 
     {
         key = TestModelFactories.createKey(new byte[]{1, 2, 3, 4});
         dataObject1 = TestModelFactories.createDataObject(key, TestModelFactories.createVersion(NumberUtils.toByteArray(2l)), new byte[1]);
         dataObject2 = TestModelFactories.createDataObject(key, TestModelFactories.createVersion(NumberUtils.toByteArray(2l)), new byte[2]);
         dataObject3 = TestModelFactories.createDataObject(key, TestModelFactories.createVersion(NumberUtils.toByteArray(3l)), new byte[3]);
-        host1 = new HostWithIntegerToken("localhost", 8080, 2);
-        host2 = new HostWithIntegerToken("localhost", 8081, 4);
-        host3 = new HostWithIntegerToken("localhost", 8082, 6);
+        host1 = new HostWithIntegerTokenFactory().createHost("localhost", 8080, NumberUtils.toByteArray(2));
+        host2 = new HostWithIntegerTokenFactory().createHost("localhost", 8081, NumberUtils.toByteArray(4));
+        host3 = new HostWithIntegerTokenFactory().createHost("localhost", 8082, NumberUtils.toByteArray(6));
 
-        coreService = mock(CoreService.class);
-        when(coreService.getCurrentHost()).thenReturn(host1);
+        clusterManager = mock(ClusterManager.class);
+        when(clusterManager.getCurrentHost()).thenReturn(host1);
 
         keyRingService = mock(KeyRingService.class);
         when(keyRingService.getPreferredHosts(key)).thenReturn(Arrays.<Host>asList(
@@ -72,7 +70,7 @@ public class CoordinationServiceImplTest {
         final CoordinationServiceImpl coordinationService = new CoordinationServiceImpl();
 
         coordinationService.setKeyRingService(keyRingService);
-        coordinationService.setCoreService(coreService);
+        coordinationService.setClusterManager(clusterManager);
 
         coordinationService.setReadCount(2);
         coordinationService.setWriteCount(2);
