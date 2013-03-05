@@ -2,11 +2,11 @@ package ru.selena.net.model.impl;
 
 import org.apache.commons.lang.Validate;
 import ru.selena.net.model.Host;
-import ru.selena.util.NumberUtils;
+import ru.selena.utils.NumberUtils;
 
 /**
  * Assumes that token is a integer number.
- *
+ * <p/>
  * Date: 12/16/12
  * Time: 2:19 PM
  *

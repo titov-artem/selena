@@ -11,7 +11,7 @@ import ru.selena.core.exception.UpdatingOlderVersionException;
 import ru.selena.model.DataObject;
 import ru.selena.model.Key;
 import ru.selena.net.model.Host;
-import ru.selena.util.collections.ArrayUtils;
+import ru.selena.utils.collections.ArrayUtils;
 
 import java.util.HashSet;
 import java.util.List;

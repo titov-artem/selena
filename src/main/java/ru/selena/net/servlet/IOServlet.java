@@ -6,7 +6,7 @@ import ru.selena.core.exception.DataStoreException;
 import ru.selena.model.DataObject;
 import ru.selena.model.Key;
 import ru.selena.net.utils.SerializationUtils;
-import ru.selena.util.collections.ArrayUtils;
+import ru.selena.utils.collections.ArrayUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;

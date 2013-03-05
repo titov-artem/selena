@@ -2,7 +2,7 @@ package ru.selena.net.model.impl;
 
 import ru.selena.net.model.Host;
 import ru.selena.net.model.HostFactory;
-import ru.selena.util.NumberUtils;
+import ru.selena.utils.NumberUtils;
 
 /**
  * Date: 3/5/13

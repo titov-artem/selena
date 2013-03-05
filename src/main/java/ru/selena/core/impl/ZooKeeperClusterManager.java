@@ -15,9 +15,7 @@ import ru.selena.core.HostTokenGenerator;
 import ru.selena.core.exception.ClusterConnectionException;
 import ru.selena.core.exception.OperationFailedException;
 import ru.selena.net.model.Host;
-import ru.selena.net.model.impl.HostWithIntegerToken;
-import ru.selena.util.NumberUtils;
-import ru.selena.util.collections.ArrayUtils;
+import ru.selena.utils.collections.ArrayUtils;
 
 import java.io.IOException;
 import java.util.List;

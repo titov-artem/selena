@@ -13,11 +13,10 @@ import ru.selena.model.DataObject;
 import ru.selena.model.Key;
 import ru.selena.net.impl.HttpTransportService;
 import ru.selena.net.model.Host;
-import ru.selena.net.model.impl.HostWithIntegerToken;
 import ru.selena.net.model.impl.HostWithIntegerTokenFactory;
 import ru.selena.net.servlet.IOServlet;
 import ru.selena.net.servlet.InternalIOServlet;
-import ru.selena.util.NumberUtils;
+import ru.selena.utils.NumberUtils;
 
 import java.util.NoSuchElementException;
 

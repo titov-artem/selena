@@ -14,9 +14,8 @@ import ru.selena.model.impl.IntegerHashKeyFactory;
 import ru.selena.model.impl.LongVersionFactory;
 import ru.selena.net.impl.HttpTransportService;
 import ru.selena.net.model.Host;
-import ru.selena.net.model.impl.HostWithIntegerToken;
 import ru.selena.net.model.impl.HostWithIntegerTokenFactory;
-import ru.selena.util.NumberUtils;
+import ru.selena.utils.NumberUtils;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,7 +1,7 @@
-package ru.selena.util.collections;
+package ru.selena.utils.collections;
 
 import org.junit.Test;
-import ru.selena.util.NumberUtils;
+import ru.selena.utils.NumberUtils;
 
 import java.util.Arrays;
 

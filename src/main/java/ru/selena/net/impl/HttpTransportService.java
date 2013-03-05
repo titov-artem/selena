@@ -25,7 +25,7 @@ import ru.selena.net.TransportService;
 import ru.selena.net.exception.ConflictException;
 import ru.selena.net.exception.NoDataException;
 import ru.selena.net.model.Host;
-import ru.selena.util.collections.ArrayUtils;
+import ru.selena.utils.collections.ArrayUtils;
 
 import java.io.IOException;
 

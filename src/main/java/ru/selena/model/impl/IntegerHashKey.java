@@ -1,8 +1,8 @@
 package ru.selena.model.impl;
 
 import ru.selena.model.Key;
-import ru.selena.util.NumberUtils;
-import ru.selena.util.collections.ArrayUtils;
+import ru.selena.utils.NumberUtils;
+import ru.selena.utils.collections.ArrayUtils;
 
 import java.util.Arrays;
 

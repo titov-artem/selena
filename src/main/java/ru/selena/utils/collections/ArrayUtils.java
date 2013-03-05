@@ -1,4 +1,4 @@
-package ru.selena.util.collections;
+package ru.selena.utils.collections;
 
 import org.apache.commons.lang.Validate;
 

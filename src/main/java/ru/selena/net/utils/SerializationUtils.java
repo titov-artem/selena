@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.selena.model.DataObject;
 import ru.selena.model.Key;
 import ru.selena.model.Version;
-import ru.selena.util.NumberUtils;
+import ru.selena.utils.NumberUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -1,7 +1,7 @@
-package ru.selena.util;
+package ru.selena.utils;
 
 import org.junit.Test;
-import ru.selena.util.collections.ArrayUtils;
+import ru.selena.utils.collections.ArrayUtils;
 
 import static junit.framework.Assert.assertEquals;
 

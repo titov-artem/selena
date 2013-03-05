@@ -1,4 +1,4 @@
-package ru.selena.util;
+package ru.selena.utils;
 
 import org.apache.commons.lang.Validate;
 

@@ -1,4 +1,4 @@
-package ru.selena.util.collections;
+package ru.selena.utils.collections;
 
 /**
  * Date: 12/16/12

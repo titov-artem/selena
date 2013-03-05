@@ -1,7 +1,7 @@
 package ru.selena.model.impl;
 
 import ru.selena.model.Version;
-import ru.selena.util.NumberUtils;
+import ru.selena.utils.NumberUtils;
 
 /**
  * Date: 12/17/12
