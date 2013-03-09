@@ -40,8 +40,8 @@ public interface ClusterManager {
      *
      * @return list of hosts
      * @throws ru.selena.core.exception.OperationFailedException
-     *          if cluster manager can't return available hosts now due
-     *          to internal problems
+     *                               if cluster manager can't return available hosts now due
+     *                               to internal problems
      * @throws IllegalStateException if cluster manager doesn't connected to cluster
      */
     List<Host> getAvailableHosts();
@@ -62,17 +62,43 @@ public interface ClusterManager {
     }
 
     /**
+     * Describe a listener with weight, witch provide ordering on listener. Not weighted listeners are supposed to have
+     * weight equals to -infinity, so they will be executed at first in the order they were added.
+     */
+    public interface WeightedClusterEventListener extends ClusterEventListener {
+
+        /**
+         * Return weight of this listener. The most light listeners will be executed at first and the most hard
+         * listeners at last. If weight is equals, then listeners will be executed in the order they were added
+         *
+         * @return integer weight
+         */
+        int getWeight();
+    }
+
+    /**
      * Describe an event in the cluster, such as loosing connection with cluster.
      */
     public static class ClusterEvent {
         private final ClusterEventType type;
+        private final ClusterManager clusterManager;
 
-        public ClusterEvent(final ClusterEventType type) {
+        public ClusterEvent(final ClusterEventType type, final ClusterManager clusterManager) {
             this.type = type;
+            this.clusterManager = clusterManager;
         }
 
         public ClusterEventType getType() {
             return type;
+        }
+
+        /**
+         * Return cluster manager, which produce this event.
+         *
+         * @return cluster manager
+         */
+        public ClusterManager getClusterManager() {
+            return clusterManager;
         }
     }
 

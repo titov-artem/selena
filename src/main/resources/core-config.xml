@@ -8,8 +8,20 @@
         <property name="replicationFactor" value="3"/>
     </bean>
 
-    <bean id="coreService" class="ru.selena.core.impl.StaticClusterManager">
+    <!--<bean id="clusterManager" class="ru.selena.core.impl.StaticClusterManager">
         <property name="keyRingService" ref="keyRingService"/>
+    </bean>-->
+    <bean id="clusterManager" class="ru.selena.core.impl.ZooKeeperClusterManager">
+        <property name="currentHostName" value="localhost"/>
+        <property name="hostTokenGenerator">
+            <bean class="ru.selena.core.impl.StaticHostTokenGenerator">
+                <property name="token" value="ffff"/>
+            </bean>
+        </property>
+        <property name="zooKeeperFolder" value="selena"/>
+        <property name="zooKeeperConnectionString" value="localhost:4243"/>
+        <property name="currentPort" value="50000"/>
+        <property name="zooKeeperSessionTimeout" value="2000"/>
     </bean>
 
     <bean id="transportService" class="ru.selena.net.impl.HttpTransportService"/>
@@ -21,7 +33,7 @@
     <bean id="coordinationService" class="ru.selena.core.impl.CoordinationServiceImpl">
         <property name="readCount" value="2"/>
         <property name="writeCount" value="2"/>
-        <property name="clusterManager" ref="coreService"/>
+        <property name="clusterManager" ref="clusterManager"/>
         <property name="remoteStoreService" ref="remoteStoreService"/>
         <property name="localStoreService" ref="localStoreService"/>
         <property name="keyRingService" ref="keyRingService"/>
@@ -36,8 +48,10 @@
     </bean>
 
     <bean class="ru.selena.HttpServerInitializer" init-method="start" destroy-method="stop">
-        <property name="clusterManager" ref="coreService"/>
+        <property name="clusterManager" ref="clusterManager"/>
         <property name="clientServlet" ref="clientIOServlet"/>
         <property name="internalServlet" ref="internalIOServlet"/>
+        <property name="localStoreService" ref="localStoreService"/>
+        <property name="keyRingService" ref="keyRingService"/>
     </bean>
 </beans>

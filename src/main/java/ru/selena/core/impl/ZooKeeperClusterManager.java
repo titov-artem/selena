@@ -1,6 +1,9 @@
 package ru.selena.core.impl;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
@@ -18,6 +21,9 @@ import ru.selena.net.model.Host;
 import ru.selena.utils.collections.ArrayUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -53,6 +59,14 @@ public class ZooKeeperClusterManager implements ClusterManager {
             return arg.getToken();
         }
     };
+    private static final Predicate<Object> IS_WEIGHTED = Predicates.instanceOf(WeightedClusterEventListener.class);
+    private static final Function<ClusterEventListener, WeightedClusterEventListener> TO_WEIGHTED =
+            new Function<ClusterEventListener, WeightedClusterEventListener>() {
+                @Override
+                public WeightedClusterEventListener apply(final ClusterEventListener arg) {
+                    return (WeightedClusterEventListener) arg;
+                }
+            };
 
     private static final int RETRY_COUNT = 3;
     private static final long DELAY_TIMEOUT_MS = 1000;
@@ -68,6 +82,7 @@ public class ZooKeeperClusterManager implements ClusterManager {
 
     private HostTokenGenerator hostTokenGenerator;
     private Iterable<ClusterEventListener> listeners;
+    private Iterable<WeightedClusterEventListener> weightedListeners;
 
     @Required
     public void setZooKeeperConnectionString(final String zooKeeperConnectionString) {
@@ -101,7 +116,17 @@ public class ZooKeeperClusterManager implements ClusterManager {
 
     @Override
     public void setClusterEventListeners(final Iterable<ClusterEventListener> listeners) {
-        this.listeners = listeners;
+        this.listeners = Iterables.filter(listeners, Predicates.not(IS_WEIGHTED));
+        final ArrayList<WeightedClusterEventListener> weightedListeners = Lists.newArrayList(
+                Iterables.transform(Iterables.filter(listeners, IS_WEIGHTED), TO_WEIGHTED)
+        );
+        Collections.sort(weightedListeners, new Comparator<WeightedClusterEventListener>() {
+            @Override
+            public int compare(final WeightedClusterEventListener o1, final WeightedClusterEventListener o2) {
+                return o1.getWeight() - o2.getWeight();
+            }
+        });
+        this.weightedListeners = weightedListeners;
     }
 
     private void connectToZooKeeper() throws IOException, InterruptedException {
@@ -201,11 +226,24 @@ public class ZooKeeperClusterManager implements ClusterManager {
     /**
      * Dispatch event to all listeners. If any exception occurs while processing, then error message would be written
      * to the log and next listener will be processed.
+     * <p/>
+     * At first event will be processed by not weighted event listeners and after that by weighted event listeners in
+     * order or weight increasing
      *
      * @param clusterEvent cluster event
      */
     private void processEvent(final ClusterEvent clusterEvent) {
         for (final ClusterEventListener listener : listeners) {
+            try {
+                listener.onCLusterEvent(clusterEvent);
+            } catch (RuntimeException e) {
+                final String message = String.format("Listener %s failed with error: %s",
+                        listener.getClass().getCanonicalName(),
+                        e.getMessage());
+                log.error(message, e);
+            }
+        }
+        for (final WeightedClusterEventListener listener : weightedListeners) {
             try {
                 listener.onCLusterEvent(clusterEvent);
             } catch (RuntimeException e) {
@@ -231,14 +269,14 @@ public class ZooKeeperClusterManager implements ClusterManager {
             final Event.KeeperState state = event.getState();
             switch (state) {
                 case Expired: {
-                    processEvent(new ClusterEvent(ClusterEventType.CONNECTION_LOST));
+                    processEvent(new ClusterEvent(ClusterEventType.CONNECTION_LOST, ZooKeeperClusterManager.this));
                 }
                 break;
                 case SyncConnected: {
                     connectionEstablished.countDown();
                     switch (type) {
                         case NodeChildrenChanged: {
-                            processEvent(new ClusterEvent(ClusterEventType.CLUSTER_CHANGED));
+                            processEvent(new ClusterEvent(ClusterEventType.CLUSTER_CHANGED, ZooKeeperClusterManager.this));
                         }
                         break;
                         default: {// do nothing

@@ -6,6 +6,7 @@ import org.junit.Test;
 import ru.selena.HttpServerInitializer;
 import ru.selena.TestModelFactories;
 import ru.selena.core.ClusterManager;
+import ru.selena.core.KeyRingService;
 import ru.selena.core.LocalStoreService;
 import ru.selena.core.exception.DataStoreException;
 import ru.selena.core.exception.UpdatingOlderVersionException;
@@ -56,12 +57,14 @@ public class RemoteStoreServiceImplTest {
         serverInitializer.setClientServlet(clientIOServlet);
         serverInitializer.setInternalServlet(internalIOServlet);
         serverInitializer.setClusterManager(clusterManager);
+        serverInitializer.setKeyRingService(mock(KeyRingService.class));
     }
 
     @Before
     public void init() throws Exception {
         localStoreService = mock(LocalStoreService.class);
         internalIOServlet.setStoreService(localStoreService);
+        serverInitializer.setLocalStoreService(localStoreService);
         serverInitializer.afterPropertiesSet();
         serverInitializer.start();
     }
@@ -83,6 +86,7 @@ public class RemoteStoreServiceImplTest {
         final DataObject returnedValue = remoteStoreService.get(key, host);
         assertEquals(value, returnedValue);
         verify(localStoreService, times(1)).get(key);
+        verify(localStoreService, times(1)).open();
         verifyNoMoreInteractions(localStoreService);
     }
 
@@ -96,6 +100,7 @@ public class RemoteStoreServiceImplTest {
         when(localStoreService.get(key)).thenReturn(value);
         final DataObject returnedValue = remoteStoreService.get(key, host);
         assertEquals(value, returnedValue);
+        verify(localStoreService, times(1)).open();
         verify(localStoreService, times(1)).get(key);
         verifyNoMoreInteractions(localStoreService);
     }
@@ -112,6 +117,7 @@ public class RemoteStoreServiceImplTest {
             assertTrue(String.format("Error message don't ends with cause message (%s; %s)", e.getMessage(), errorMessage),
                     e.getMessage().endsWith(errorMessage));
         }
+        verify(localStoreService, times(1)).open();
         verify(localStoreService, times(1)).get(key);
         verifyNoMoreInteractions(localStoreService);
     }
@@ -128,6 +134,7 @@ public class RemoteStoreServiceImplTest {
             assertTrue(String.format("Error message don't ends with cause message (%s; %s)", e.getMessage(), getMessage),
                     e.getMessage().endsWith(getMessage));
         }
+        verify(localStoreService, times(1)).open();
         verify(localStoreService, times(1)).get(key);
         verifyNoMoreInteractions(localStoreService);
     }
@@ -141,6 +148,7 @@ public class RemoteStoreServiceImplTest {
                 new byte[]{1, 2, 3, 4}
         );
         remoteStoreService.put(value, host);
+        verify(localStoreService, times(1)).open();
         verify(localStoreService, times(1)).put(value);
         verifyNoMoreInteractions(localStoreService);
     }
@@ -153,6 +161,7 @@ public class RemoteStoreServiceImplTest {
                 TestModelFactories.createVersion(new byte[]{1, 2, 3, 4, 5, 6, 7, 8})
         );
         remoteStoreService.put(value, host);
+        verify(localStoreService, times(1)).open();
         verify(localStoreService, times(1)).put(value);
         verifyNoMoreInteractions(localStoreService);
     }
@@ -174,7 +183,9 @@ public class RemoteStoreServiceImplTest {
             assertTrue(String.format("Error message don't ends with cause message (%s; %s)", e.getMessage(), conflictMessage),
                     e.getMessage().endsWith(conflictMessage));
         }
+        verify(localStoreService, times(1)).open();
         verify(localStoreService, times(1)).put(value);
+        verifyNoMoreInteractions(localStoreService);
     }
 
     @Test
@@ -194,6 +205,7 @@ public class RemoteStoreServiceImplTest {
             assertTrue(String.format("Error message don't ends with cause message (%s; %s)", e.getMessage(), storeMessage),
                     e.getMessage().endsWith(storeMessage));
         }
+        verify(localStoreService, times(1)).open();
         verify(localStoreService, times(1)).put(value);
         verifyNoMoreInteractions(localStoreService);
     }
