@@ -33,6 +33,7 @@ import java.util.concurrent.CountDownLatch;
  *
  * @author Artem Titov
  */
+// todo we need to do something like this: if host disappear on a short time, we shouldn't rebalance cluster, but if host disappear at all we should remove them
 public class ZooKeeperClusterManager implements ClusterManager {
     private static final Logger log = LoggerFactory.getLogger(ConnectionWatcher.class);
 
